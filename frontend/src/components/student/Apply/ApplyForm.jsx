@@ -94,6 +94,13 @@ const ErrorText = styled.span`
   display: block;
 `;
 
+const OptionStyled = styled.option`
+  &.selected {
+    color: red; /* Change this color as needed */
+    background-color: #f0f0f0;
+  }
+`;
+
 const StudentPlacementForm = () => {
   const [companies, setCompanies] = useState([]);
   const [studentPreferences, setStudentPreferences] = useState([]);

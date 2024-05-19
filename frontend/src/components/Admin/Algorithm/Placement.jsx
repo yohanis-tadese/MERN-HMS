@@ -6,7 +6,7 @@ import criteriaService from "../../../services/criteria.service";
 import companyService from "../../../services/company.service";
 import ApplyStudentList from "../ApplyStudentList/ApplyStudentList";
 import ConfirmationDialog from "./ConfirmationDialog";
-import { fetchRemainingTime } from "../../../utils/timeUtils";
+// import { fetchRemainingTime } from "../../../utils/timeUtils";
 import ApplyTime from "../applyTime/ApplyTime";
 
 const Button = styled.button`
@@ -51,31 +51,32 @@ const StudentPlacement = () => {
     localStorage.setItem("showCompany", JSON.stringify(showCompany));
   }, [placementGenerated, showCompany]);
 
-  useEffect(() => {
-    const fetchRemainingTimeAndGeneratePlacement = async () => {
-      try {
-        const remainingTime = await fetchRemainingTime(1);
-        if (remainingTime === 0 && !placementGenerated) {
-          console.log("Generating placement...");
-          if (companiesData.length > 0) {
-            assignStudentsToCompanies();
-            setPlacementGenerated(true);
-            setShowCompany(true);
-          } else {
-            console.log("Companies data not available yet.");
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching remaining time:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchRemainingTimeAndGeneratePlacement = async () => {
+  //     try {
+  //       const remainingTime = await fetchRemainingTime(1);
 
-    const intervalId = setInterval(() => {
-      fetchRemainingTimeAndGeneratePlacement();
-    }, 3000);
+  //       if (remainingTime === 0 && !placementGenerated) {
+  //         console.log("Generating placement...");
+  //         if (companiesData.length > 0) {
+  //           assignStudentsToCompanies();
+  //           setPlacementGenerated(true);
+  //           setShowCompany(true);
+  //         } else {
+  //           console.log("Companies data not available yet.");
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching remaining time:", error);
+  //     }
+  //   };
 
-    return () => clearInterval(intervalId);
-  }, [placementGenerated]);
+  //   const intervalId = setInterval(() => {
+  //     fetchRemainingTimeAndGeneratePlacement();
+  //   }, 3000);
+
+  //   return () => clearInterval(intervalId);
+  // }, [placementGenerated]);
 
   useEffect(() => {
     updateWeights();

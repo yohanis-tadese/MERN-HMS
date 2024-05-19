@@ -1,6 +1,6 @@
 const { query } = require("../config/db.config");
 const bcrypt = require("bcrypt");
-const { sendEmail } = require("../sendEmail");
+// const { sendEmail } = require("../sendEmail");
 
 // Function to check if the company exists in the database
 async function checkIfCompanyExists(username) {
@@ -55,12 +55,12 @@ async function createCompany(company) {
     ]);
     const companyId = result.insertId;
 
-    await sendEmail(
-      company.company_name,
-      company.contact_email,
-      username,
-      company.password
-    );
+    // await sendEmail(
+    //   company.company_name,
+    //   company.contact_email,
+    //   username,
+    //   company.password
+    // );
 
     return companyId;
   } catch (error) {

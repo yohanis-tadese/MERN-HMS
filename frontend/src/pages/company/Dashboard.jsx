@@ -11,7 +11,7 @@ import ReactApexChart from "react-apexcharts";
 import Boxs from "../../ui/Boxes";
 import Box from "../../ui/Box";
 import DashboardContainer from "../../ui/DashboardContainer";
-import { fetchRemainingTime } from "../../utils/timeUtils";
+// import { fetchRemainingTime } from "../../utils/timeUtils";
 
 const IconContainer = styled.div`
   position: absolute;
@@ -39,11 +39,11 @@ function Dashboard() {
 
   const [remainingTime, setRemainingTime] = useState(null);
 
-  useEffect(() => {
-    fetchRemainingTime(1).then((remainingTime) => {
-      setRemainingTime(remainingTime);
-    });
-  }, []);
+  // useEffect(() => {
+  //   fetchRemainingTime(1).then((remainingTime) => {
+  //     setRemainingTime(remainingTime);
+  //   });
+  // }, []);
 
   useEffect(() => {
     async function fetchData() {

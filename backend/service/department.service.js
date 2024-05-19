@@ -14,11 +14,24 @@ async function checkIfDepartmentExists(username) {
   return rows.length > 0;
 }
 
-// Function to create a new department
 async function createDepartment(department) {
   try {
-    // Generate a unique username for the department
-    const username = `dept.${department.department_name}`;
+    // Generate the username automatically
+    let username = "";
+    const spaceIndex = department.department_name.indexOf(" ");
+    if (
+      spaceIndex !== -1 &&
+      spaceIndex < department.department_name.length - 1
+    ) {
+      const firstFourChars = department.department_name.substring(0, 4);
+      const afterSpace = department.department_name.substring(spaceIndex + 1);
+      username = `dept.${firstFourChars}${afterSpace}`;
+    } else {
+      username = `dept.${department.department_name}`;
+    }
+
+    // Remove any spaces from the username
+    username = username.replace(/\s+/g, "");
 
     // Hash the password before storing it
     const hashedPassword = await hashPassword(department.password);
@@ -106,12 +119,25 @@ async function getAllDepartments(page, size) {
     throw new Error(`Error fetching departments: ${error.message}`);
   }
 }
+
 async function updateDepartment(departmentId, departmentData) {
   try {
     const { department_name, phone_number, contact_email, office_location } =
       departmentData;
 
-    const username = `dept.${department_name}`;
+    // Generate the username automatically
+    let username = "";
+    const spaceIndex = department_name.indexOf(" ");
+    if (spaceIndex !== -1 && spaceIndex < department_name.length - 1) {
+      const firstFourChars = department_name.substring(0, 4);
+      const afterSpace = department_name.substring(spaceIndex + 1);
+      username = `dept.${firstFourChars}${afterSpace}`;
+    } else {
+      username = `dept.${department_name}`;
+    }
+
+    // Remove any spaces from the username
+    username = username.replace(/\s+/g, "");
 
     const updateSql = `
       UPDATE departments
@@ -175,7 +201,7 @@ async function updateDepartmentProfile(
       departmentData.photo = photoFilename;
     }
 
-    const username = `dept.${department_name.toLowerCase()}`;
+    const username = `dept.${department_name.replace(/\s+/g, "")}`;
 
     // Construct the update SQL query
     let updateSql = `

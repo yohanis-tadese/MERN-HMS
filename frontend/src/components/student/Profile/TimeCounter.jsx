@@ -48,18 +48,11 @@ const TimeCounter = ({ remainingTime }) => {
       .padStart(2, "0")}`;
   };
 
-  const getTimeEnd = () => {
-    const now = new Date();
-    const end = new Date(now.getTime() + remainingTime * 1000);
-    return end.toLocaleTimeString();
-  };
-
   return (
     <TimeCounterContainer>
       {remainingTime === 0 ? (
         <TimeMessage>
-          The time for submitting your application has expired it ended at:{" "}
-          {getTimeEnd()}
+          The time for submitting your application has expired.
         </TimeMessage>
       ) : (
         <>

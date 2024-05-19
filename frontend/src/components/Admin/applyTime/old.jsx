@@ -5,6 +5,7 @@ import Input from "../../../ui/Input";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import timeService from "../../../services/time.service";
+import { fetchRemainingTime } from "../../../utils/timeUtils";
 
 const Container = styled.div`
   display: flex;
@@ -29,56 +30,24 @@ const ApplyTime = () => {
     end_time: "",
   });
 
-  console.log("fooooo", formData);
-
-  // // Format the fetched time values
-  // const formattedStartTime = new Date(response.start_time)
-  //   .toISOString()
-  //   .slice(0, 16);
-  // const formattedEndTime = new Date(response.end_time)
-  //   .toISOString()
-  //   .slice(0, 16);
+  console.log("Formdata", formData);
 
   useEffect(() => {
     console.log("Fetching time data...");
-
     const fetchTime = async () => {
       try {
         const timeId = 1;
         const response = await timeService.getTimeById(timeId);
 
-        if (!response || !response.start_time || !response.end_time) {
-          throw new Error("Invalid response data");
-        }
-
-        // Convert UTC time to local time in Africa/Nairobi timezone and then manually format
-        const startDate = new Date(response.start_time);
-        const endDate = new Date(response.end_time);
-
-        const formattedStartTime =
-          startDate.getFullYear() +
-          "-" +
-          ("0" + (startDate.getMonth() + 1)).slice(-2) +
-          "-" +
-          ("0" + startDate.getDate()).slice(-2) +
-          "T" +
-          ("0" + startDate.getHours()).slice(-2) +
-          ":" +
-          ("0" + startDate.getMinutes()).slice(-2);
-
-        const formattedEndTime =
-          endDate.getFullYear() +
-          "-" +
-          ("0" + (endDate.getMonth() + 1)).slice(-2) +
-          "-" +
-          ("0" + endDate.getDate()).slice(-2) +
-          "T" +
-          ("0" + endDate.getHours()).slice(-2) +
-          ":" +
-          ("0" + endDate.getMinutes()).slice(-2);
+        // Format the fetched time values using Africa/Nairobi time zone
+        const formattedStartTime = new Date(response.start_time)
+          .toLocaleString("en-US", { timeZone: "Africa/Nairobi" })
+          .replace(", ", "T"); // Adjusting format for datetime-local input
+        const formattedEndTime = new Date(response.end_time)
+          .toLocaleString("en-US", { timeZone: "Africa/Nairobi" })
+          .replace(", ", "T"); // Adjusting format for datetime-local input
 
         setFormData({
-          ...formData,
           start_time: formattedStartTime,
           end_time: formattedEndTime,
         });
@@ -118,7 +87,7 @@ const ApplyTime = () => {
           type="datetime-local"
           id="start_time"
           name="start_time"
-          value={formData.start_time}
+          value={formData.start_time || ""}
           onChange={handleChange}
           required
         />
@@ -126,7 +95,7 @@ const ApplyTime = () => {
           type="datetime-local"
           id="end_time"
           name="end_time"
-          value={formData.end_time}
+          value={formData.end_time || ""}
           onChange={handleChange}
           required
         />

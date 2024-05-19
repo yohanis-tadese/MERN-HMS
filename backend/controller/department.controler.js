@@ -27,10 +27,63 @@ const upload = multer({
 
 const updateDepartmentPhoto = upload.single("photo");
 
+// async function createDepartment(req, res, next) {
+//   try {
+//     // Generate the username automatically
+//     const username = `dept.${department_name.replace(/\s+/g, "")}`;
+//     // Check if department name already exists
+//     const departmentExists = await departmentService.checkIfDepartmentExists(
+//       username
+//     );
+
+//     if (departmentExists) {
+//       return res.status(400).json({
+//         error: "This department name already exists!",
+//       });
+//     }
+
+//     // Create new department
+//     const departmentId = await departmentService.createDepartment({
+//       department_name: req.body.department_name,
+//       phone_number: req.body.phone_number,
+//       contact_email: req.body.contact_email,
+//       office_location: req.body.office_location,
+//       password: req.body.password,
+//       photo: req.body.photo,
+//     });
+
+//     return res.status(200).json({
+//       status: true,
+//       message: "Department created successfully",
+//       departmentId,
+//     });
+//   } catch (error) {
+//     console.error("Error creating department:", error);
+//     return res.status(500).json({
+//       error: "Internal server error",
+//     });
+//   }
+// }
+
 async function createDepartment(req, res, next) {
   try {
+    // Retrieve department name from request body
+    const department_name = req.body.department_name;
+
     // Generate the username automatically
-    const username = `dept.${req.body.department_name}`;
+    let username = "";
+    const spaceIndex = department_name.indexOf(" ");
+    if (spaceIndex !== -1 && spaceIndex < department_name.length - 1) {
+      const firstFourChars = department_name.substring(0, 4);
+      const afterSpace = department_name.substring(spaceIndex + 1);
+      username = `dept.${firstFourChars}${afterSpace}`;
+    } else {
+      username = `dept.${department_name}`;
+    }
+
+    // Remove any spaces from the username
+    username = username.replace(/\s+/g, "");
+
     // Check if department name already exists
     const departmentExists = await departmentService.checkIfDepartmentExists(
       username
@@ -44,12 +97,13 @@ async function createDepartment(req, res, next) {
 
     // Create new department
     const departmentId = await departmentService.createDepartment({
-      department_name: req.body.department_name,
+      department_name: department_name,
       phone_number: req.body.phone_number,
       contact_email: req.body.contact_email,
       office_location: req.body.office_location,
       password: req.body.password,
       photo: req.body.photo,
+      username: username, // Include the generated username in the department data
     });
 
     return res.status(200).json({
@@ -146,8 +200,6 @@ async function updateDepartmentProfile(req, res, next) {
   try {
     // Extract department ID from request parameters
     const departmentId = req.params.departmentId;
-
-    console.log("ggggg", departmentId);
 
     // Check if a file was uploaded
     let photoFilename = null;
